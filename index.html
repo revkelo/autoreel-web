@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Autoreel — Automated Short Video Publisher</title>
+  <meta name="description" content="Autoreel is a personal content automation tool that renders short educational tech videos and publishes them to the owner's own social media accounts." />
+  <style>
+    :root {
+      --bg: #0e0f13;
+      --card: #171922;
+      --text: #e8eaf0;
+      --muted: #9aa0b0;
+      --accent: #4f8cff;
+      --border: #262a38;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+    header { padding: 96px 0 64px; text-align: center; }
+    .logo {
+      display: inline-flex; align-items: center; gap: 12px;
+      font-size: 2.6rem; font-weight: 800; letter-spacing: -0.02em;
+    }
+    .logo .dot { color: var(--accent); }
+    .tagline { margin-top: 16px; font-size: 1.15rem; color: var(--muted); }
+    .cards {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px; margin: 24px 0 64px;
+    }
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 24px;
+    }
+    .card h3 { font-size: 1rem; margin-bottom: 8px; }
+    .card p { font-size: 0.92rem; color: var(--muted); }
+    .emoji { font-size: 1.6rem; display: block; margin-bottom: 10px; }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0 48px; text-align: center; color: var(--muted); font-size: 0.9rem;
+    }
+    footer a { color: var(--accent); text-decoration: none; margin: 0 10px; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">🎬 Autoreel<span class="dot">.</span></div>
+      <p class="tagline">
+        A personal content automation tool that designs, renders and publishes
+        short educational tech videos — programming, cloud, DevOps and cybersecurity —
+        to the owner's own social media accounts.
+      </p>
+    </header>
+
+    <section class="cards">
+      <div class="card">
+        <span class="emoji">✍️</span>
+        <h3>Script &amp; Design</h3>
+        <p>Video ideas become structured scripts with hooks, on-screen text and real brand assets, designed automatically.</p>
+      </div>
+      <div class="card">
+        <span class="emoji">🎥</span>
+        <h3>Automated Rendering</h3>
+        <p>A layer-based motion engine renders vertical and horizontal videos with voice-over, subtitles, music and effects.</p>
+      </div>
+      <div class="card">
+        <span class="emoji">🚀</span>
+        <h3>Direct Publishing</h3>
+        <p>Finished videos are uploaded directly to the owner's own YouTube and TikTok accounts. No third-party content is handled.</p>
+      </div>
+    </section>
+
+    <footer>
+      <p>
+        <a href="terms.html">Terms of Service</a> ·
+        <a href="privacy.html">Privacy Policy</a>
+      </p>
+      <p style="margin-top:12px;">© 2026 Autoreel — @kagonzalezdev. Personal, non-commercial project.</p>
+    </footer>
+  </div>
+</body>
+</html>
