@@ -3,86 +3,439 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Autoreel — Automated Short Video Publisher</title>
-  <meta name="description" content="Autoreel is a personal content automation tool that renders short educational tech videos and publishes them to the owner's own social media accounts." />
+  <title>Autoreel — The self-driving video studio</title>
+  <meta name="description" content="Autoreel is a personal, single-user video factory: it scripts, voices, renders and publishes short educational tech videos to its owner's own YouTube and TikTok accounts." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0e0f13;
-      --card: #171922;
-      --text: #e8eaf0;
-      --muted: #9aa0b0;
-      --accent: #4f8cff;
-      --border: #262a38;
+      --bg: #101218;
+      --panel: #171a22;
+      --panel-2: #1d2130;
+      --border: #262b3a;
+      --ink: #eceef4;
+      --muted: #99a0b2;
+      --rec: #ff4757;
+      --amber: #f7b955;
+      --track-voice: #5b8def;
+      --track-subs: #48c78e;
+      --track-music: #b085f5;
+      --track-layers: #f7b955;
+      --mono: "JetBrains Mono", ui-monospace, monospace;
+      --display: "Space Grotesk", sans-serif;
+      --body: "Inter", -apple-system, "Segoe UI", sans-serif;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: var(--body);
       background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
+      color: var(--ink);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
     }
-    .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px; }
-    header { padding: 96px 0 64px; text-align: center; }
-    .logo {
-      display: inline-flex; align-items: center; gap: 12px;
-      font-size: 2.6rem; font-weight: 800; letter-spacing: -0.02em;
+    a { color: inherit; }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 0 24px; }
+
+    /* ───────── nav ───────── */
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 0;
     }
-    .logo .dot { color: var(--accent); }
-    .tagline { margin-top: 16px; font-size: 1.15rem; color: var(--muted); }
-    .cards {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 16px; margin: 24px 0 64px;
+    .brand {
+      font-family: var(--display); font-weight: 700; font-size: 1.15rem;
+      display: inline-flex; align-items: center; gap: 9px; text-decoration: none;
     }
-    .card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 14px; padding: 24px;
+    .rec-dot {
+      width: 11px; height: 11px; border-radius: 50%;
+      background: var(--rec);
+      box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.5);
+      animation: pulse 2.4s ease-out infinite;
     }
-    .card h3 { font-size: 1rem; margin-bottom: 8px; }
-    .card p { font-size: 0.92rem; color: var(--muted); }
-    .emoji { font-size: 1.6rem; display: block; margin-bottom: 10px; }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,71,87,0.45); }
+      70% { box-shadow: 0 0 0 10px rgba(255,71,87,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,71,87,0); }
+    }
+    nav .links { display: flex; gap: 22px; font-size: 0.88rem; color: var(--muted); }
+    nav .links a { text-decoration: none; }
+    nav .links a:hover { color: var(--ink); }
+
+    /* ───────── hero ───────── */
+    header { padding: 72px 0 40px; }
+    .eyebrow {
+      font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--amber);
+    }
+    h1 {
+      font-family: var(--display); font-weight: 700;
+      font-size: clamp(2.3rem, 5.5vw, 3.8rem);
+      line-height: 1.08; letter-spacing: -0.02em; margin: 14px 0 20px;
+      max-width: 17ch;
+    }
+    h1 .rec-word { color: var(--rec); }
+    .lede { font-size: 1.12rem; color: var(--muted); max-width: 58ch; }
+    .lede strong { color: var(--ink); font-weight: 600; }
+
+    /* ───────── timeline (signature) ───────── */
+    .timeline {
+      margin: 56px 0 0;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+    .tl-bar {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--mono); font-size: 0.72rem; color: var(--muted);
+    }
+    .tl-bar .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .tl-bar .d1 { background: #ff5f57; } .tl-bar .d2 { background: #febc2e; } .tl-bar .d3 { background: #28c840; }
+    .tl-bar .file { margin-left: 10px; }
+    .tl-bar .tc { margin-left: auto; color: var(--amber); }
+    .tl-body { position: relative; padding: 14px 0 18px; }
+    .tl-row {
+      display: grid; grid-template-columns: 110px 1fr;
+      align-items: center; gap: 0; padding: 5px 16px;
+    }
+    .tl-label {
+      font-family: var(--mono); font-size: 0.68rem; letter-spacing: 0.08em;
+      color: var(--muted); text-transform: uppercase;
+    }
+    .tl-track { position: relative; height: 26px; border-radius: 6px; background: var(--panel-2); overflow: hidden; }
+    .clip {
+      position: absolute; top: 3px; bottom: 3px; border-radius: 4px; opacity: 0.9;
+      display: flex; align-items: center; padding: 0 8px;
+      font-family: var(--mono); font-size: 0.62rem; font-weight: 600; color: #0d0f14;
+      white-space: nowrap; overflow: hidden;
+    }
+    .playhead {
+      position: absolute; top: 0; bottom: 0; left: 126px; width: 2px;
+      background: var(--rec); z-index: 2;
+      animation: scrub 7s linear infinite;
+    }
+    .playhead::before {
+      content: ""; position: absolute; top: 0; left: -5px;
+      border: 6px solid transparent; border-top-color: var(--rec);
+    }
+    @keyframes scrub {
+      from { left: 126px; }
+      to { left: calc(100% - 18px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .playhead { animation: none; left: 40%; }
+      .rec-dot { animation: none; }
+    }
+
+    /* ───────── sections ───────── */
+    section { padding: 76px 0 8px; }
+    .sec-head { margin-bottom: 34px; }
+    .sec-head .eyebrow { color: var(--rec); }
+    h2 {
+      font-family: var(--display); font-weight: 700;
+      font-size: clamp(1.5rem, 3vw, 2.1rem); letter-spacing: -0.015em; margin-top: 8px;
+    }
+    .sec-head p { color: var(--muted); max-width: 62ch; margin-top: 8px; }
+
+    /* pipeline */
+    .pipeline { display: grid; gap: 12px; }
+    .step {
+      display: grid; grid-template-columns: 84px 1fr; gap: 18px;
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px 22px; align-items: baseline;
+    }
+    .step .tcode {
+      font-family: var(--mono); font-size: 0.8rem; font-weight: 600; color: var(--amber);
+    }
+    .step h3 { font-family: var(--display); font-size: 1.05rem; margin-bottom: 4px; }
+    .step p { font-size: 0.93rem; color: var(--muted); }
+    .step code {
+      font-family: var(--mono); font-size: 0.8em; color: var(--ink);
+      background: var(--panel-2); padding: 1px 6px; border-radius: 4px;
+    }
+
+    /* capabilities grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+    .cap {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px; padding: 22px;
+    }
+    .cap .tag {
+      display: inline-block; font-family: var(--mono); font-size: 0.65rem;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #0d0f14;
+      padding: 2px 8px; border-radius: 999px; margin-bottom: 12px;
+    }
+    .cap h3 { font-family: var(--display); font-size: 1.02rem; margin-bottom: 6px; }
+    .cap p { font-size: 0.92rem; color: var(--muted); }
+
+    /* tech stack */
+    .stack { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+    .stack-col {
+      background: var(--panel); border: 1px solid var(--border);
+      border-radius: 12px; padding: 20px;
+    }
+    .stack-col h3 {
+      font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--amber); margin-bottom: 12px; font-weight: 600;
+    }
+    .stack-col ul { list-style: none; }
+    .stack-col li {
+      font-size: 0.92rem; padding: 6px 0; border-bottom: 1px dashed var(--border);
+    }
+    .stack-col li:last-child { border-bottom: none; }
+    .stack-col li span { color: var(--muted); font-size: 0.85em; }
+
+    /* ownership note */
+    .note {
+      margin-top: 70px;
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border); border-radius: 14px;
+      padding: 30px 28px;
+    }
+    .note h2 { font-size: 1.3rem; margin-bottom: 10px; }
+    .note p { color: var(--muted); font-size: 0.96rem; max-width: 70ch; }
+    .note strong { color: var(--ink); }
+
     footer {
-      border-top: 1px solid var(--border);
-      padding: 32px 0 48px; text-align: center; color: var(--muted); font-size: 0.9rem;
+      margin-top: 80px; border-top: 1px solid var(--border);
+      padding: 34px 0 52px; color: var(--muted); font-size: 0.88rem;
     }
-    footer a { color: var(--accent); text-decoration: none; margin: 0 10px; }
+    footer .foot { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: space-between; }
+    footer a { color: var(--amber); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
+
+    :focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; border-radius: 4px; }
+
+    @media (max-width: 640px) {
+      .step { grid-template-columns: 1fr; gap: 4px; }
+      .tl-row { grid-template-columns: 84px 1fr; }
+      .playhead { left: 100px; }
+      @keyframes scrub { from { left: 100px; } to { left: calc(100% - 14px); } }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
+    <nav>
+      <a class="brand" href="#"><span class="rec-dot" aria-hidden="true"></span>Autoreel</a>
+      <div class="links">
+        <a href="#pipeline">Pipeline</a>
+        <a href="#capabilities">Capabilities</a>
+        <a href="#stack">Tech stack</a>
+        <a href="terms.html">Terms</a>
+        <a href="privacy.html">Privacy</a>
+      </div>
+    </nav>
+
     <header>
-      <div class="logo">🎬 Autoreel<span class="dot">.</span></div>
-      <p class="tagline">
-        A personal content automation tool that designs, renders and publishes
-        short educational tech videos — programming, cloud, DevOps and cybersecurity —
-        to the owner's own social media accounts.
+      <p class="eyebrow">Personal · single-user · automated</p>
+      <h1>The video studio that runs itself. <span class="rec-word">●&nbsp;REC</span></h1>
+      <p class="lede">
+        Autoreel turns a one-line idea into a finished short video — script, voice-over,
+        subtitles, music, motion design, thumbnail — and publishes it to
+        <strong>its owner's own</strong> YouTube and TikTok accounts.
+        Educational tech content: programming, cloud, DevOps and cybersecurity.
       </p>
+
+      <div class="timeline" role="img" aria-label="Mock video editor timeline showing voice, subtitles, music and layer tracks being rendered">
+        <div class="tl-bar">
+          <span class="dot d1"></span><span class="dot d2"></span><span class="dot d3"></span>
+          <span class="file">project_json — kubernetes-en-60s.mp4</span>
+          <span class="tc">00:00:14:07 / 00:00:32:00</span>
+        </div>
+        <div class="tl-body">
+          <div class="playhead" aria-hidden="true"></div>
+          <div class="tl-row">
+            <span class="tl-label">Voice</span>
+            <div class="tl-track"><span class="clip" style="left:2%; width:90%; background:var(--track-voice);">edge-tts · es-DO-Emilio</span></div>
+          </div>
+          <div class="tl-row">
+            <span class="tl-label">Subtitles</span>
+            <div class="tl-track">
+              <span class="clip" style="left:2%; width:16%; background:var(--track-subs);"></span>
+              <span class="clip" style="left:20%; width:22%; background:var(--track-subs);"></span>
+              <span class="clip" style="left:44%; width:18%; background:var(--track-subs);"></span>
+              <span class="clip" style="left:64%; width:28%; background:var(--track-subs);"></span>
+            </div>
+          </div>
+          <div class="tl-row">
+            <span class="tl-label">Music</span>
+            <div class="tl-track"><span class="clip" style="left:2%; width:96%; background:var(--track-music);">instrumental · vol 0.12</span></div>
+          </div>
+          <div class="tl-row">
+            <span class="tl-label">Layers</span>
+            <div class="tl-track">
+              <span class="clip" style="left:2%; width:12%; background:var(--track-layers);">hook</span>
+              <span class="clip" style="left:16%; width:24%; background:var(--track-layers);">card + logo</span>
+              <span class="clip" style="left:42%; width:26%; background:var(--track-layers);">keyframes</span>
+              <span class="clip" style="left:70%; width:22%; background:var(--track-layers);">cta</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </header>
 
-    <section class="cards">
-      <div class="card">
-        <span class="emoji">✍️</span>
-        <h3>Script &amp; Design</h3>
-        <p>Video ideas become structured scripts with hooks, on-screen text and real brand assets, designed automatically.</p>
+    <section id="pipeline">
+      <div class="sec-head">
+        <p class="eyebrow">How it works</p>
+        <h2>From idea to published, unattended</h2>
+        <p>Every video moves through a state machine — <code style="font-family:var(--mono); font-size:0.85em;">IDEA → GENERATING → READY → PUBLISHED</code> — processed by a background worker, one video at a time.</p>
       </div>
-      <div class="card">
-        <span class="emoji">🎥</span>
-        <h3>Automated Rendering</h3>
-        <p>A layer-based motion engine renders vertical and horizontal videos with voice-over, subtitles, music and effects.</p>
-      </div>
-      <div class="card">
-        <span class="emoji">🚀</span>
-        <h3>Direct Publishing</h3>
-        <p>Finished videos are uploaded directly to the owner's own YouTube and TikTok accounts. No third-party content is handled.</p>
+      <div class="pipeline">
+        <div class="step">
+          <span class="tcode">STEP 01</span>
+          <div>
+            <h3>Idea &amp; script</h3>
+            <p>A topic becomes a script with a viral hook in the first second, structured for retention. The scene design is a declarative <code>project_json</code>: layers with keyframes, real brand logos, cards and motion.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="tcode">STEP 02</span>
+          <div>
+            <h3>Voice &amp; subtitles</h3>
+            <p>Neural text-to-speech generates the voice-over locally, with word-level timing cues. Subtitles are laid onto the video automatically from those same cues — always in sync.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="tcode">STEP 03</span>
+          <div>
+            <h3>Render</h3>
+            <p>A layer-based motion engine draws every frame on canvas — text, shapes, images, easing curves — and encodes MP4 with WebCodecs in headless Chromium. Vertical 1080×1920 or horizontal 1920×1080. Background music is mixed in automatically.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="tcode">STEP 04</span>
+          <div>
+            <h3>Thumbnail</h3>
+            <p>Each video gets a designed thumbnail — adaptive title pill, real logos over clean cards — either from a custom design or generated automatically.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="tcode">STEP 05</span>
+          <div>
+            <h3>Publish</h3>
+            <p>Finished videos are uploaded straight to the owner's own channels: YouTube (Data API v3 — vertical uploads become Shorts) and TikTok (Content Posting API, direct file upload). Publishing preferences and privacy level are configurable in-app.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="tcode">STEP 06</span>
+          <div>
+            <h3>Measure</h3>
+            <p>Engagement stats for the owner's published videos — views, likes, comments — are snapshotted periodically and shown on a dashboard to decide what to make next.</p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <footer>
+    <section id="capabilities">
+      <div class="sec-head">
+        <p class="eyebrow">Capabilities</p>
+        <h2>What the studio can do</h2>
+      </div>
+      <div class="grid">
+        <div class="cap">
+          <span class="tag" style="background:var(--track-layers);">Engine</span>
+          <h3>Layer-based motion engine</h3>
+          <p>Text, shapes and images animated with per-property keyframes and easing curves. Auto-fit text inside cards, rounded corners, strokes, opacity choreography.</p>
+        </div>
+        <div class="cap">
+          <span class="tag" style="background:var(--track-voice);">Audio</span>
+          <h3>Local neural TTS</h3>
+          <p>Voice-over synthesized locally with neural voices, tuned prosody, and precise timing cues that drive both subtitles and scene changes.</p>
+        </div>
+        <div class="cap">
+          <span class="tag" style="background:var(--track-subs);">Formats</span>
+          <h3>Vertical &amp; horizontal</h3>
+          <p>Shorts/TikTok-style vertical pieces (15–45s, one concept per video) and long-form horizontal formats like 5-minute quiz videos with segmented timers.</p>
+        </div>
+        <div class="cap">
+          <span class="tag" style="background:var(--track-music);">Templates</span>
+          <h3>Reusable scene templates</h3>
+          <p>Formulaic videos (top-5 lists, quizzes) instantiate from code templates in seconds — no design cost. Custom layouts are designed per-video when it's worth it.</p>
+        </div>
+        <div class="cap">
+          <span class="tag" style="background:var(--track-layers);">Automation</span>
+          <h3>Queue &amp; worker</h3>
+          <p>A scheduler claims queued videos and produces them end-to-end, unattended: TTS, subtitles, music, render, thumbnail, publish. Failures are retryable.</p>
+        </div>
+        <div class="cap">
+          <span class="tag" style="background:var(--track-voice);">Agent-ready</span>
+          <h3>MCP server</h3>
+          <p>An MCP (Model Context Protocol) server exposes the whole studio as tools — create, validate, edit and render projects — so an AI agent can operate it conversationally.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="stack">
+      <div class="sec-head">
+        <p class="eyebrow">Under the hood</p>
+        <h2>Tech stack</h2>
+        <p>Everything runs on the owner's own infrastructure. Rendering and voice cost nothing per video — no paid APIs in the production pipeline.</p>
+      </div>
+      <div class="stack">
+        <div class="stack-col">
+          <h3>Web &amp; API</h3>
+          <ul>
+            <li>Next.js (App Router) <span>— dashboard + REST API</span></li>
+            <li>TypeScript <span>— end to end</span></li>
+            <li>React <span>— video library, planning, stats UI</span></li>
+          </ul>
+        </div>
+        <div class="stack-col">
+          <h3>Render engine</h3>
+          <ul>
+            <li>Canvas 2D <span>— layer drawing contract</span></li>
+            <li>WebCodecs <span>— MP4 encoding in-browser</span></li>
+            <li>Headless Chromium <span>— unattended renders</span></li>
+            <li>edge-tts <span>— local neural voice-over</span></li>
+          </ul>
+        </div>
+        <div class="stack-col">
+          <h3>Data &amp; jobs</h3>
+          <ul>
+            <li>PostgreSQL <span>— videos, projects, publications</span></li>
+            <li>Node.js worker <span>— render &amp; publish queue</span></li>
+            <li>Docker Compose <span>— web + worker + db</span></li>
+          </ul>
+        </div>
+        <div class="stack-col">
+          <h3>Integrations</h3>
+          <ul>
+            <li>YouTube Data API v3 <span>— resumable uploads, Shorts</span></li>
+            <li>TikTok Content Posting API <span>— direct post</span></li>
+            <li>MCP server <span>— AI-agent orchestration</span></li>
+            <li>Vitest + Playwright <span>— tests &amp; e2e</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="note">
+      <h2>One owner, one account, own content</h2>
       <p>
-        <a href="terms.html">Terms of Service</a> ·
-        <a href="privacy.html">Privacy Policy</a>
+        Autoreel is a <strong>personal, non-commercial, single-user tool</strong>. It is not a
+        service offered to the public: it creates original educational content and publishes it
+        exclusively to accounts owned by its operator (<strong>@kagonzalezdev</strong>). It never
+        reads, collects or processes data from other platform users, and all credentials stay on
+        the owner's private infrastructure. Details in the
+        <a href="terms.html" style="color:var(--amber);">Terms of Service</a> and
+        <a href="privacy.html" style="color:var(--amber);">Privacy Policy</a>.
       </p>
-      <p style="margin-top:12px;">© 2026 Autoreel — @kagonzalezdev. Personal, non-commercial project.</p>
+    </div>
+
+    <footer>
+      <div class="foot">
+        <span>© 2026 Autoreel — @kagonzalezdev</span>
+        <span>
+          <a href="terms.html">Terms of Service</a> ·
+          <a href="privacy.html">Privacy Policy</a> ·
+          <a href="mailto:kgagudelo@gmail.com">Contact</a>
+        </span>
+      </div>
     </footer>
   </div>
 </body>
